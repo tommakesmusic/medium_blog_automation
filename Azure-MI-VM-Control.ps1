@@ -1,5 +1,5 @@
 Param(
- [string]$automationAccount,
+ [string]$automationaccount,
  [string]$resourcegroup,
  [string]$vmname,
  [string]$method,
@@ -37,7 +37,7 @@ elseif ($method -eq "ua")
 
         # validates assignment only, not perms
         if ((Get-AzAutomationAccount -ResourceGroupName $resourcegroup `
-                -Name $automationAccount `
+                -Name $automationaccount `
                 -DefaultProfile $AzureContext).Identity.UserAssignedIdentities.Values.PrincipalId.Contains($identity.PrincipalId))
             {
                 $AzureContext = (Connect-AzAccount -Identity -AccountId $identity.ClientId).context
