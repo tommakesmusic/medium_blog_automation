@@ -3,6 +3,7 @@ Param(
  [string]$resourcegroup,
  [string]$vmname,
  [string]$method,
+ [string]$mi_client_id,
  [string]$mi_principal_id
 )
 
@@ -14,18 +15,20 @@ Disable-AzContextAutosave -Scope Process | Out-Null
 
 
 # Connect using a Managed Service Identity
-#try {
-#        $AzureContext = (Connect-AzAccount -Identity).context
-#    }
-#catch{
-#        Write-Output "There is no system-assigned user identity. Aborting.";
-#        exit
-#    }
+try {
+        $AzureContext = (Connect-AzAccount -Identity).context
+    }
+catch{
+        Write-Output "There is no system-assigned user identity. Aborting.";
+        exit
+    }
 
+
+# Connect to Azure with user-assigned managed identity
+$AzureContext = (Connect-AzAccount -Identity -AccountId $mi_client_id).context
 
 # set and store context
-$AzureContext = Set-AzContext -SubscriptionName $AzureContext.Subscription `
-    -DefaultProfile $AzureContext
+$AzureContext = Set-AzContext -SubscriptionName $AzureContext.Subscription -DefaultProfile $AzureContext
 
 if ($method -eq "sa")
     {
