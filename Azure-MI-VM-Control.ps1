@@ -9,16 +9,19 @@ Param(
 # Ensures you do not inherit an AzContext in your runbook
 Disable-AzContextAutosave -Scope Process | Out-Null
 
-# Get-AzUserAssignedIdentity -ResourceGroupName $resourcegroup -Name $mi_principal_id).PrincipalId
+#Get-AzUserAssignedIdentity -ResourceGroupName $resourcegroup -Name $mi_principal_id).PrincipalId
+#$UAMI = (Get-AzUserAssignedIdentity -ResourceGroupName $resourceGroup -Name $userAssignedManagedIdentity).PrincipalId
+
 
 # Connect using a Managed Service Identity
-try {
-        $AzureContext = (Connect-AzAccount -Identity).context
-    }
-catch{
-        Write-Output "There is no system-assigned user identity. Aborting."; 
-        exit
-    }
+#try {
+#        $AzureContext = (Connect-AzAccount -Identity).context
+#    }
+#catch{
+#        Write-Output "There is no system-assigned user identity. Aborting.";
+#        exit
+#    }
+
 
 # set and store context
 $AzureContext = Set-AzContext -SubscriptionName $AzureContext.Subscription `
@@ -46,8 +49,7 @@ elseif ($method -eq "ua")
                 $AzureContext = (Connect-AzAccount -Identity -AccountId $identity.ClientId).context
 
                 # set and store context
-                $AzureContext = Set-AzContext -SubscriptionName $AzureContext.Subscription -DefaultProfile $AzureContext
-            }
+           }
         else {
                 Write-Output "Invalid or unassigned user-assigned managed identity"
                 exit
