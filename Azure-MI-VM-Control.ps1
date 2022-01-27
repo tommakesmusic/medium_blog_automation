@@ -3,11 +3,13 @@ Param(
  [string]$resourcegroup,
  [string]$vmname,
  [string]$method,
- [string]$managed_id
+ [string]$mi_principal_id
 )
 
 # Ensures you do not inherit an AzContext in your runbook
 Disable-AzContextAutosave -Scope Process | Out-Null
+
+# Get-AzUserAssignedIdentity -ResourceGroupName $resourcegroup -Name $mi_principal_id).PrincipalId
 
 # Connect using a Managed Service Identity
 try {
@@ -32,7 +34,8 @@ elseif ($method -eq "ua")
 
         # Connects using the Managed Service Identity of the named user-assigned managed identity
         $identity = Get-AzUserAssignedIdentity -ResourceGroupName $resourcegroup `
-            -Name $managed_id
+            -Name $mi_principal_id
+        
             -DefaultProfile $AzureContext
 
         # validates assignment only, not perms
