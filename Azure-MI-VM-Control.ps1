@@ -1,7 +1,16 @@
 Param(
- [string]$vmname,
- [string]$mi_principal_id,
- [string]$resourcegroup
+    [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()] 
+    [String] 
+    $resourcegroup,    
+    [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()] 
+    [String] 
+    $mi_principal_id, 
+    [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()] 
+    [String] 
+    $vmname, 
+    [Parameter(Mandatory=$true)][ValidateSet("Start","Stop")] 
+    [String] 
+    $action
 )
 
 # Ensures you do not inherit an AzContext in your runbook
@@ -20,19 +29,21 @@ Write-Output "Account ID of current context: " $AzureContext.Account.Id
 # Get current state of VM
 $status = (Get-AzVM -ResourceGroupName $resourcegroup -Name $vmname -Status -DefaultProfile $AzureContext).Statuses[1].Code
 
-Write-Output "`r`n Beginning VM status: $status `r`n"
+Write-Output "`r`n Beginning $vmname VM status: $status `r`n"
 
-# Start or stop VM based on current state
-if($status -eq "Powerstate/deallocated")
-    {
-        Start-AzVM -Name $vmname -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext
-    }
-elseif ($status -eq "Powerstate/running")
-    {
-        Stop-AzVM -Name $vmname -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext -Force
-    }
+
+if($action -eq "Stop") 
+{ 
+    Write-Output "Stopping VM: $vmname";
+    Stop-AzVM -Name $vmname -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext -Force
+} 
+else 
+{ 
+    Write-Output "Starting VM: $vmname";
+    Start-AzVM -Name $vmname -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext
+}
 
 # Get new state of VM
 $status = (Get-AzVM -ResourceGroupName $resourcegroup -Name $vmname -Status -DefaultProfile $AzureContext).Statuses[1].Code  
 
-Write-Output "`r`n Ending VM status: $status `r`n `r`n"
+Write-Output "`r`n Ending $vmname VM status: $status `r`n `r`n"
