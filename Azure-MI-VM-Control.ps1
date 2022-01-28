@@ -1,6 +1,7 @@
 Param(
  [string]$vmname,
  [string]$mi_principal_id
+ [string]$resourcegroup
 )
 
 # Ensures you do not inherit an AzContext in your runbook
