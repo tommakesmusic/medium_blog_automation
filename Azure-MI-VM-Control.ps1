@@ -7,6 +7,8 @@ Param(
 Disable-AzContextAutosave -Scope Process | Out-Null
 
 # Connect to Azure with user-assigned managed identity
+# Don't do what Microsoft say - they use client_id here but it needs to be
+# the managed_identity_principal_id
 $AzureContext = (Connect-AzAccount -Identity -AccountId $mi_principal_id).context
 
 # set and store context
