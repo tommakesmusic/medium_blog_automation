@@ -1,6 +1,6 @@
 Param(
  [string]$vmname,
- [string]$mi_principal_id
+ [string]$mi_principal_id,
  [string]$resourcegroup
 )
 
