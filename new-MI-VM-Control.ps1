@@ -58,7 +58,7 @@ foreach ($VM in $VMsToChange) {
             # Stop the VM
             try {
                 Write-Output "Stopping VM $VM ..."
-                Stop-AzVM -Name $vmname -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext -Force
+                Stop-AzVM -Name $VM -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext -Force
             }
             catch {
                 $ErrorMessage = $_.Exception.message
