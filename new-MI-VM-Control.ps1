@@ -57,8 +57,8 @@ $AzureContext = Set-AzContext -SubscriptionName $AzureContext.Subscription -Defa
 Write-Output "Account ID of current context: " $AzureContext.Account.Id
 
 # Separate our vmlist into an array we can iterate over
-$VMssplit = $vmlist.Split(",") 
-[System.Collections.ArrayList]$VMs = $VMssplit
+# $VMssplit = $vmlist.Split(",") 
+[System.Collections.ArrayList]$VMs = $vmlist #$VMssplit
 
 # Loop through one or more VMs which will be passed in from the terraform as a list
 # If the list is empty it will skip the block
