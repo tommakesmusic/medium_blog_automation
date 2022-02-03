@@ -34,7 +34,7 @@ Param(
     [String] 
     $mi_principal_id, 
     [parameter(Mandatory=$true)][ValidateNotNullOrEmpty()]
-    [array]
+    [string]
     $vmlist, 
     [Parameter(Mandatory=$true)][ValidateSet("Start","Stop")] 
     [String] 
@@ -57,8 +57,8 @@ $AzureContext = Set-AzContext -SubscriptionName $AzureContext.Subscription -Defa
 Write-Output "Account ID of current context: " $AzureContext.Account.Id
 
 # Separate our vmlist into an array we can iterate over
-# $VMssplit = $vmlist.Split(",") 
-[System.Collections.ArrayList]$VMs = $vmlist #$VMssplit
+$VMssplit = $vmlist.Split(",") 
+[System.Collections.ArrayList]$VMs = $VMssplit
 
 # Loop through one or more VMs which will be passed in from the terraform as a list
 # If the list is empty it will skip the block
