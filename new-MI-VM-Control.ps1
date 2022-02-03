@@ -34,7 +34,7 @@ Param(
     [String] 
     $mi_principal_id, 
     [parameter(Mandatory=$true)][ValidateNotNullOrEmpty()]
-    [string[]]
+    [array]
     $vmlist, 
     [Parameter(Mandatory=$true)][ValidateSet("Start","Stop")] 
     [String] 
