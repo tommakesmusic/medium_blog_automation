@@ -70,7 +70,7 @@ foreach ($VM in $VMs){
 
     switch ($action) {
         "Start" {
-            if (-ne ($day, "Saturday") -or -ne ($day, "Sunday")){
+            if (($day -ne "Saturday") -or ($day -ne "Sunday")){
                 # Start the VM
                 try {
                     Write-Output "Starting VM $VM ..."
