@@ -3,7 +3,7 @@
     Control Azure VMs with an Automation Account and a User-assigned Managed Identity.
 .DESCRIPTION
     Allows control over a list of Azure Virtual Machines. Runbook can Start, Stop and
-    Read the status of each Virtual Machine in a list pass in as a parameter.
+    Read the status of each Virtual Machine in a list passed in as a string parameter.
 
 .NOTES
   Version:        1.0.1
@@ -34,14 +34,15 @@ Param(
     [String] 
     $mi_principal_id, 
     [parameter(Mandatory=$true)][ValidateNotNullOrEmpty()]
-    [string]
+	[string]
     $vmlist, 
     [Parameter(Mandatory=$true)][ValidateSet("Start","Stop")] 
     [String] 
     $action
 )
 
-
+$day = (get-date).DayOfWeek
+Write-Output "day value is: $day"
 Write-Output "Script started at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 # Ensures you do not inherit an AzContext in your runbook
 Disable-AzContextAutosave -Scope Process | Out-Null
@@ -62,22 +63,24 @@ $VMssplit = $vmlist.Split(",")
 
 # Loop through one or more VMs which will be passed in from the terraform as a list
 # If the list is empty it will skip the block
-foreach ($VM in $VMs) {
+foreach ($VM in $VMs){
 
     $status = (Get-AzVM -ResourceGroupName $resourcegroup -Name $VM -Status -DefaultProfile $AzureContext).Statuses[1].Code
     Write-Output "`r`n Initial $VM VM status: $status `r`n `r`n"
 
     switch ($action) {
         "Start" {
-            # Start the VM
-            try {
-                Write-Output "Starting VM $VM ..."
-                Start-AzVM -Name $VM -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext
-            }
-            catch {
-                $ErrorMessage = $_.Exception.message
-                Write-Error ("Error starting the VM $VM : " + $ErrorMessage)
-                Break
+            if (-ne ($day, "Saturday") -or -ne ($day, "Sunday")){
+                # Start the VM
+                try {
+                    Write-Output "Starting VM $VM ..."
+                    Start-AzVM -Name $VM -ResourceGroupName $resourcegroup -DefaultProfile $AzureContext
+                }
+                catch {
+                    $ErrorMessage = $_.Exception.message
+                    Write-Error ("Error starting the VM $VM : " + $ErrorMessage)
+                    Break
+                }
             }
         }
         "Stop" {
